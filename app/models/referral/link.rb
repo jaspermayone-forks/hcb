@@ -43,5 +43,13 @@ module Referral
       update!(slug: self.hashid) unless self.slug.present?
     end
 
+    def new_teenagers
+      attributions.joins(:user)
+                  .where("EXTRACT(EPOCH FROM (referral_attributions.created_at - users.created_at)) < 60*60")
+                  .where("users.teenager = true")
+                  .map(&:user)
+                  .uniq
+    end
+
   end
 end

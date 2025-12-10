@@ -1434,6 +1434,10 @@ class AdminController < Admin::BaseController
   def active_teenagers_leaderboard
   end
 
+  def new_teenagers_leaderboard
+    @link_creators = User.where(id: Referral::Link.select(:creator_id).map(&:creator_id).uniq).includes(:referral_links)
+  end
+
   private
 
   def stream_data(content_type, filename, data, download = true)
