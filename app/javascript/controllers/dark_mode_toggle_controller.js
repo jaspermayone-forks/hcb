@@ -14,10 +14,10 @@ export default class extends Controller {
     this.updateBlogEmbed(selectedTheme)
     this.updateDocusealForm(selectedTheme)
     this.toggleTargets.forEach(target => {
-      const check = target.querySelector('svg')
       const targetTheme = target.getAttribute('data-value')
-      check?.classList?.[selectedTheme === targetTheme ? 'remove' : 'add']?.(
-        'hidden'
+      target?.classList?.[selectedTheme === targetTheme ? 'add' : 'remove']?.(
+        'hovered',
+        'font-extrabold'
       )
     })
   }
