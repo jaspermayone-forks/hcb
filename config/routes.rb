@@ -719,6 +719,7 @@ Rails.application.routes.draw do
             post "topup"
             post "withdraw"
             post "cancel"
+            get "transactions"
           end
         end
 
