@@ -11,7 +11,7 @@ module Api
       end
 
       def sub_organizations
-        authorize @event, :sub_organizations?
+        authorize @event, :sub_organizations_in_v4?
 
         @events = @event.subevents.includes(:users).order("organizer_positions.created_at DESC")
       end
