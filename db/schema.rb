@@ -466,7 +466,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_17_173228) do
     t.string "merchant_lock"
     t.boolean "pre_authorization_required", default: false, null: false
     t.boolean "reimbursement_conversions_enabled", default: true, null: false
-    t.index ["event_id"], name: "index_card_grant_settings_on_event_id"
+    t.index ["event_id"], name: "index_card_grant_settings_on_event_id", unique: true
   end
 
   create_table "card_grants", force: :cascade do |t|
