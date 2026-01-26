@@ -466,6 +466,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_26_203310) do
     t.string "merchant_lock"
     t.boolean "pre_authorization_required", default: false, null: false
     t.boolean "reimbursement_conversions_enabled", default: true, null: false
+    t.string "support_message"
+    t.string "support_url"
     t.index ["event_id"], name: "index_card_grant_settings_on_event_id", unique: true
   end
 
