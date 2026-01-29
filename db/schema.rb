@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_27_061326) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_28_060550) do
   create_schema "google_sheets"
 
   # These are extensions that must be enabled in order to support this database
@@ -1772,6 +1772,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_061326) do
     t.integer "amount_cents"
     t.string "column_report_id"
     t.jsonb "column_transaction"
+    t.jsonb "column_transfer"
     t.datetime "created_at", null: false
     t.date "date_posted"
     t.text "description"
