@@ -384,6 +384,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_01_234218) do
     t.boolean "fronted", default: false
     t.text "hcb_code"
     t.bigint "increase_check_id"
+    t.bigint "ledger_item_id"
     t.text "memo", null: false
     t.bigint "paypal_transfer_id"
     t.bigint "raw_pending_bank_fee_transaction_id"
@@ -403,6 +404,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_01_234218) do
     t.index ["check_deposit_id"], name: "index_canonical_pending_transactions_on_check_deposit_id"
     t.index ["hcb_code"], name: "index_canonical_pending_transactions_on_hcb_code"
     t.index ["increase_check_id"], name: "index_canonical_pending_transactions_on_increase_check_id"
+    t.index ["ledger_item_id"], name: "index_canonical_pending_transactions_on_ledger_item_id"
     t.index ["paypal_transfer_id"], name: "index_canonical_pending_transactions_on_paypal_transfer_id"
     t.index ["raw_pending_bank_fee_transaction_id"], name: "index_canonical_pending_txs_on_raw_pending_bank_fee_tx_id"
     t.index ["raw_pending_column_transaction_id"], name: "idx_on_raw_pending_column_transaction_id_ceea9a99e1", unique: true
@@ -428,12 +430,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_01_234218) do
     t.date "date", null: false
     t.text "friendly_memo"
     t.text "hcb_code"
+    t.bigint "ledger_item_id"
     t.text "memo", null: false
     t.bigint "transaction_source_id"
     t.string "transaction_source_type"
     t.datetime "updated_at", null: false
     t.index ["date"], name: "index_canonical_transactions_on_date"
     t.index ["hcb_code"], name: "index_canonical_transactions_on_hcb_code"
+    t.index ["ledger_item_id"], name: "index_canonical_transactions_on_ledger_item_id"
     t.index ["transaction_source_type", "transaction_source_id"], name: "index_canonical_transactions_on_transaction_source"
   end
 
@@ -2706,7 +2710,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_01_234218) do
   add_foreign_key "canonical_pending_event_mappings", "events"
   add_foreign_key "canonical_pending_settled_mappings", "canonical_pending_transactions"
   add_foreign_key "canonical_pending_settled_mappings", "canonical_transactions"
+  add_foreign_key "canonical_pending_transactions", "ledger_items"
   add_foreign_key "canonical_pending_transactions", "raw_pending_stripe_transactions"
+  add_foreign_key "canonical_transactions", "ledger_items"
   add_foreign_key "card_grant_pre_authorizations", "card_grants"
   add_foreign_key "card_grant_settings", "events"
   add_foreign_key "card_grants", "events"
