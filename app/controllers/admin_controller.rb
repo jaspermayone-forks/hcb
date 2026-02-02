@@ -1283,11 +1283,11 @@ class AdminController < Admin::BaseController
         require "csv"
 
         csv = Enumerator.new do |y|
-          y << ::CSV::Row.new(header_syms, ["", "Report generated on #{Time.now.in_time_zone('Eastern Time (US & Canada)').strftime("%Y-%m-%d at %l:%M %p %Z")}"], true).to_s
-          y << ::CSV::Row.new(header_syms, @headers, true).to_s
+          y << SafeCsv::Row.new(header_syms, ["", "Report generated on #{Time.now.in_time_zone('Eastern Time (US & Canada)').strftime("%Y-%m-%d at %l:%M %p %Z")}"], true).to_s
+          y << SafeCsv::Row.new(header_syms, @headers, true).to_s
 
           @rows.each do |row|
-            y << ::CSV::Row.new(header_syms, row).to_s
+            y << SafeCsv::Row.new(header_syms, row).to_s
           end
         end
 
