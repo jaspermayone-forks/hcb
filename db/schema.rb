@@ -1629,12 +1629,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_04_060052) do
     t.datetime "created_at", null: false
     t.boolean "is_reauthentication", default: false, null: false
     t.bigint "referral_link_id"
-    t.bigint "referral_program_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.bigint "user_session_id"
     t.index ["referral_link_id"], name: "index_logins_on_referral_link_id"
-    t.index ["referral_program_id"], name: "index_logins_on_referral_program_id"
     t.index ["user_id"], name: "index_logins_on_user_id"
     t.index ["user_session_id"], name: "index_logins_on_user_session_id"
   end
