@@ -967,7 +967,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_04_200446) do
     t.bigint "affiliable_id", null: false
     t.string "affiliable_type", null: false
     t.datetime "created_at", null: false
-    t.bigint "event_id", null: false
+    t.bigint "event_id"
     t.jsonb "metadata", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
