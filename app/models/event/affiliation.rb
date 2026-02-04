@@ -24,9 +24,9 @@
 #
 class Event
   class Affiliation < ApplicationRecord
+    self.ignored_columns += ["event_id"]
     include Hashid::Rails
 
-    belongs_to :event
     belongs_to :affiliable, polymorphic: true
 
     store_accessor :metadata, :league, :team_number, :size, :venue_name
