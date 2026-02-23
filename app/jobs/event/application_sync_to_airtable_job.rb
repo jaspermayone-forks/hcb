@@ -47,8 +47,8 @@ class Event
 
       airrecord.save
 
-      # update_columns bypasses callbacks, preventing schedule_airtable_sync from re-enqueuing and infinite looping.
-      @application.update_columns(airtable_record_id: airrecord.id, airtable_status: airrecord["Status"])
+      # Updating airtable_synced_at prevents infinite looping this job
+      @application.update!(airtable_record_id: airrecord.id, airtable_status: airrecord["Status"], airtable_synced_at: DateTime.now)
     end
 
   end
