@@ -118,7 +118,9 @@ class Event
       event :mark_submitted do
         transitions from: :draft, to: :submitted
         after do
-          if user.teenager?
+          update!(teen_led: user.is_teenager?)
+
+          if teen_led?
             create_contract
             Event::ApplicationMailer.with(application: self).confirmation.deliver_later
           else
@@ -137,7 +139,7 @@ class Event
       event :mark_approved do
         transitions from: [:submitted, :under_review], to: :approved
         after do
-          unless user.teenager?
+          unless teen_led?
             create_contract unless contract.present?
             Event::ApplicationMailer.with(application: self).approved.deliver_later
           end
@@ -236,6 +238,10 @@ class Event
         raise StandardError.new("Cannot create a contract for application #{hashid}: missing name and/or description")
       end
 
+      if cosigner_email.present? && !user.is_minor?
+        update!(cosigner_email: nil)
+      end
+
       fs_contract = nil
       ActiveRecord::Base.transaction do
         fs_contract = Contract::FiscalSponsorship.create!(contractable: self, include_videos: false, external_template_id: Event::Plan::Standard.new.contract_docuseal_template_id, prefills: { "public_id" => public_id, "name" => name, "description" => description })
@@ -252,7 +258,7 @@ class Event
     def ready_to_submit?
       required_fields = ["name", "description", "address_line1", "address_city", "address_state", "address_postal_code", "address_country", "referrer"]
 
-      if user.age.present? && user.age < 18
+      if user.is_minor?
         required_fields.push("cosigner_email")
       end
 
@@ -264,7 +270,7 @@ class Event
     end
 
     def response_time
-      user.teenager? ? "48 hours" : "2 weeks"
+      teen_led? ? "48 hours" : "2 weeks"
     end
 
     def status_color
