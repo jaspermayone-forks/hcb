@@ -493,7 +493,6 @@ Rails.application.routes.draw do
 
   resources :hcb_codes, path: "/hcb", only: [:show, :edit, :update], concerns: :commentable do
     member do
-      post "comment"
       get "attach_receipt"
       get "memo_frame"
       get "dispute"
