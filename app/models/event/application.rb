@@ -158,6 +158,8 @@ class Event
 
     scope :in_progress, -> { where.not(aasm_state: ["approved", "rejected"]) }
 
+    DISALLOWED_COUNTRIES = %w[IN NG RU CU IR KP SY BY VE SD SS MM AF YE SO PK].freeze
+
     def rejection_messages
       generic = <<~MSG.strip
         Hi #{user.first_name},
@@ -266,7 +268,7 @@ class Event
         self[field].nil?
       end
 
-      !missing_fields && !user.onboarding?
+      !missing_fields && !user.onboarding? && !address_country.in?(DISALLOWED_COUNTRIES)
     end
 
     def response_time
