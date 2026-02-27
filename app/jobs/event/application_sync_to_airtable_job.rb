@@ -53,6 +53,11 @@ class Event
       airrecord["HCB Status"] = @application.aasm_state.humanize unless @application.draft?
       airrecord["Synced from HCB at"] = Time.current
 
+      if @application.event.present?
+        airrecord["HCB ID"] = @application.event.id
+        airrecord["HCB account URL"] = Rails.application.helpers.url_helpers.event_url(@application.event)
+      end
+
       airrecord.save
 
       # Updating airtable_synced_at prevents infinite looping this job
