@@ -344,6 +344,7 @@ Rails.application.routes.draw do
   resources :contracts, only: [] do
     member do
       post "void"
+      post "reissue"
     end
   end
 

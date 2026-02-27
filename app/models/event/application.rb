@@ -121,7 +121,7 @@ class Event
           update!(teen_led: user.is_teenager?)
 
           if teen_led?
-            create_contract
+            send_contract
             Event::ApplicationMailer.with(application: self).confirmation.deliver_later
           else
             mark_under_review!
@@ -140,7 +140,7 @@ class Event
         transitions from: [:submitted, :under_review], to: :approved
         after do
           unless teen_led?
-            create_contract unless contract.present?
+            send_contract unless contract.present?
             Event::ApplicationMailer.with(application: self).approved.deliver_later
           end
         end
@@ -235,7 +235,7 @@ class Event
       !teen_led?
     end
 
-    def create_contract
+    def send_contract(reissue_signee_message: nil, reissue_cosigner_message: nil, **options)
       if name.nil? || description.nil?
         raise StandardError.new("Cannot create a contract for application #{hashid}: missing name and/or description")
       end
@@ -251,8 +251,8 @@ class Event
         fs_contract.parties.create!(external_email: cosigner_email, role: :cosigner) if cosigner_email.present?
       end
 
-      fs_contract.send!
-      fs_contract.party(:cosigner)&.notify
+      fs_contract.send!(reissue_signee_message:, reissue_cosigner_message:)
+      fs_contract.party(:cosigner)&.notify unless reissue_signee_message.present? || reissue_cosigner_message.present?
 
       fs_contract
     end
@@ -293,7 +293,7 @@ class Event
     def check_cosigner_update
       if contract.present? && cosigner_email_previously_changed?
         contract.mark_voided!
-        create_contract
+        send_contract
       end
     end
 
