@@ -137,7 +137,7 @@ class Event
       end
 
       event :mark_approved do
-        transitions from: [:submitted, :under_review], to: :approved
+        transitions from: :under_review, to: :approved
         after do
           unless teen_led?
             send_contract unless contract.present?
