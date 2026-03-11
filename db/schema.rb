@@ -1809,14 +1809,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_10_040000) do
   create_table "organizer_positions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "deleted_at", precision: nil
-    t.bigint "event_id"
+    t.bigint "event_id", null: false
     t.boolean "first_time", default: true
     t.bigint "fiscal_sponsorship_contract_id"
     t.boolean "is_signee", default: false
     t.integer "role", default: 100, null: false
     t.integer "sort_index"
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["event_id"], name: "index_organizer_positions_on_event_id"
     t.index ["fiscal_sponsorship_contract_id"], name: "index_organizer_positions_on_fiscal_sponsorship_contract_id"
     t.index ["user_id"], name: "index_organizer_positions_on_user_id"
