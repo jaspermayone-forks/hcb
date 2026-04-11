@@ -1109,7 +1109,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_06_231428) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.datetime "activated_at"
     t.text "address"
     t.boolean "can_front_balance", default: true, null: false
