@@ -1064,7 +1064,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_06_231428) do
   end
 
   create_table "event_plans", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.datetime "created_at", null: false
     t.bigint "event_id", null: false
     t.datetime "inactive_at"
