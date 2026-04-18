@@ -191,7 +191,7 @@ jobs:
           echo "Running $(echo "$specs" | wc -l) spec files on shard $SHARD_INDEX/$SHARD_TOTAL"
           bundle exec rspec --tag ~skip $specs
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           # Each shard generates its own coverage file; name them uniquely
           # so the upload action doesn't clash. Merging into a single report
