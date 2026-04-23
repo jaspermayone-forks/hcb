@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-ruby
       - name: Run erb_lint
-        run: bundle exec erb_lint app/views/
+        run: bin/erb_lint
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
