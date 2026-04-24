@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# locals: (json:, invitation:)
+
 object_shape(json, invitation) do
   json.accepted invitation.accepted?
   json.sender { json.partial! "api/v4/users/user", user: invitation.sender }

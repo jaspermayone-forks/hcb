@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, donation:)
+
 object_shape(json, donation) do
   json.recurring donation.recurring?
   json.donor do

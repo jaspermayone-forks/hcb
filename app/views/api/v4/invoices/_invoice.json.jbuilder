@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, invoice:)
+
 object_shape(json, invoice) do
   json.status invoice.state_text
   json.to invoice.sponsor.name

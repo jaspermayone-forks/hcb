@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, comment:)
+
 object_shape(json, comment) do
   json.user comment.user, partial: "api/v4/users/user", as: :user
   json.content comment.content

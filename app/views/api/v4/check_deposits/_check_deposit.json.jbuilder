@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, check_deposit:)
+
 object_shape(json, check_deposit) do
   json.status check_deposit.state_text.parameterize(separator: "_")
   json.amount_cents check_deposit.amount_cents

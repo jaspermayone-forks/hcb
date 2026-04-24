@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# locals: (json:, receipt:)
+
 object_shape(json, receipt) do
   json.url receipt.url
   json.preview_url receipt.preview(only_path: false)

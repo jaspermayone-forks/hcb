@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, disbursement:)
+
 object_shape(json, disbursement) do
   json.memo disbursement.local_hcb_code.memo
   json.status disbursement.v4_api_state

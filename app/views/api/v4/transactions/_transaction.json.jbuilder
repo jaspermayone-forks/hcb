@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, tx:)
+
 # This partial is capable of rendering `HcbCode`, `CanonicalPendingTransaction`, and `CanonicalTransactionGrouped` instances
 
 hcb_code = tx.is_a?(HcbCode) ? tx : tx.local_hcb_code

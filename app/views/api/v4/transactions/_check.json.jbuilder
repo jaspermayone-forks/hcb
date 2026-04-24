@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# locals: (json:, check:)
+
 object_shape(json, check) do
   if policy(check.local_hcb_code).show?
     json.address_city check.is_a?(IncreaseCheck) ? check.address_city : nil

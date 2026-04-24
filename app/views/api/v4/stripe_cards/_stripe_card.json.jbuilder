@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, stripe_card:)
+
 object_shape(json, stripe_card) do
   json.type stripe_card.card_type
   json.status stripe_card.status_text.parameterize(separator: "_")

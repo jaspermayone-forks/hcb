@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, event:)
+
 object_shape(json, event, object_name: "organization") do
   json.parent_id event.parent&.public_id
   json.name event.name

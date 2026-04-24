@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, wise_transfer:)
+
 object_shape(json, wise_transfer) do
   json.recipient_name wise_transfer.recipient_name
   json.recipient_email wise_transfer.recipient_email

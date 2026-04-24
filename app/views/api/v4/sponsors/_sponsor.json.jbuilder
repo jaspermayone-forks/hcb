@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, sponsor:)
+
 object_shape(json, sponsor) do
   json.address_city sponsor.address_city
   json.address_country sponsor.address_country

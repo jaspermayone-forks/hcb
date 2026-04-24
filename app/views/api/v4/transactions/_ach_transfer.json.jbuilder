@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, ach_transfer:)
+
 object_shape(json, ach_transfer) do
   json.recipient_name ach_transfer.recipient_name
   json.recipient_email ach_transfer.recipient_email

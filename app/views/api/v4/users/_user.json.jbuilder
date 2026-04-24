@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# locals: (json:, user:, show_email: nil)
+
 # attributes suitable for public consumption:
 object_shape(json, user, created_at: false) do
   json.avatar profile_picture_for(user, params[:avatar_size].presence&.to_i || 24)

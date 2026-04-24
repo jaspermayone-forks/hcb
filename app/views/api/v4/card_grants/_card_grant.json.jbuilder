@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# locals: (json:, card_grant:)
+
 object_shape(json, card_grant) do
   json.user card_grant.user, partial: "api/v4/users/user", as: :user if expand?(:user)
   json.organization card_grant.event, partial: "api/v4/events/event", as: :event if expand?(:organization)
