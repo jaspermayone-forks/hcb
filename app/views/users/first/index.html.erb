@@ -45,6 +45,36 @@
   </div>
 <% end %>
 
+<% if ["head_coach", "mentor_advisor"].include?(affiliation&.role) && @team_event.nil? && @teammates.present? %>
+  <div class="card my-4">
+    <div class="flex flex-row items-center gap-3 mb-3">
+      <div class="avatar-row avatar-row--no-transform flex-shrink-0">
+        <% @teammates.each do |teammate| %>
+          <%= avatar_for teammate, size: 32 %>
+        <% end %>
+      </div>
+      <h3 class="heading my-0">Your teammates are interested</h3>
+    </div>
+
+    <% names = @teammates.map { |u| u.first_name.presence || u.full_name.to_s.split(" ").first || "Someone" } %>
+    <% leftover = @teammates_total - @teammates.size %>
+    <% team_label = "#{@first_affiliation.league&.upcase} ##{@first_affiliation.team_number}" %>
+    <% sentence = case @teammates.size
+                  when 1
+                    leftover.zero? ? "#{names[0]} from #{team_label} is already interested in HCB" : "#{names[0]} and #{pluralize(leftover, 'other')} from #{team_label} are already interested in HCB"
+                  when 2
+                    leftover.zero? ? "#{names[0]} and #{names[1]} from #{team_label} are already interested in HCB" : "#{names[0]}, #{names[1]}, and #{pluralize(leftover, 'other')} from #{team_label} are already interested in HCB"
+                  else
+                    extras = leftover + (@teammates.size - 2)
+                    "#{names[0]}, #{names[1]}, and #{pluralize(extras, 'other')} from #{team_label} are already interested in HCB"
+                  end %>
+
+    <p class="my-2"><%= sentence %>. Get your team's organization set up to fundraise and spend together.</p>
+
+    <%= link_to "Start your team's organization →", apply_path, class: "btn" %>
+  </div>
+<% end %>
+
 <% if @macbook_raffle.present? %>
   <%= render "users/first/raffle", raffle: @macbook_raffle, raffle_name: "MacBook Neo" %>
 <% end %>
@@ -74,6 +104,28 @@
               Get a free AirPods Pro 3!
             </h2>
             <p class="my-0 md:my-2">Email your advisor with information about HCB, and we'll sign you up for our AirPods raffle! Get a chance to win a free AirPods Pro 3.</p>
+            <% if @teammates.present? %>
+              <div class="flex flex-row items-center gap-3 mt-4">
+                <div class="avatar-row avatar-row--no-transform flex-shrink-0">
+                  <% @teammates.each do |teammate| %>
+                    <%= avatar_for teammate, size: 32 %>
+                  <% end %>
+                </div>
+                <% names = @teammates.map { |u| u.first_name.presence || u.full_name.to_s.split(" ").first || "Someone" } %>
+                <% leftover = @teammates_total - @teammates.size %>
+                <% team_label = "#{@first_affiliation.league&.upcase} ##{@first_affiliation.team_number}" %>
+                <% sentence = case @teammates.size
+                              when 1
+                                leftover.zero? ? "#{names[0]} from #{team_label} is already interested in HCB" : "#{names[0]} and #{pluralize(leftover, 'other')} from #{team_label} are already interested in HCB"
+                              when 2
+                                leftover.zero? ? "#{names[0]} and #{names[1]} from #{team_label} are already interested in HCB" : "#{names[0]}, #{names[1]}, and #{pluralize(leftover, 'other')} from #{team_label} are already interested in HCB"
+                              else
+                                extras = leftover + (@teammates.size - 2)
+                                "#{names[0]}, #{names[1]}, and #{pluralize(extras, 'other')} from #{team_label} are already interested in HCB"
+                              end %>
+                <p class="my-0 text-sm text-white/80 leading-snug"><%= sentence %></p>
+              </div>
+            <% end %>
             <%= link_to "#", class: "btn bg-info gap-1 hidden sm:inline-flex mt-2", "data-behavior": "modal_trigger", "data-modal": "modal" do %>
               Email your advisor about HCB →
             <% end %>
@@ -133,6 +185,27 @@
                 Request to join their organization, and once you're approved we'll automatically sign you up for our 3D printer raffle for a chance to win a free Bambu Lab A1.
               <% end %>
             </p>
+            <% if @team_org_members.present? %>
+              <div class="flex flex-row items-center gap-3 mt-4">
+                <div class="avatar-row avatar-row--no-transform flex-shrink-0">
+                  <% @team_org_members.each do |member| %>
+                    <%= avatar_for member, size: 32 %>
+                  <% end %>
+                </div>
+                <% names = @team_org_members.map { |u| u.first_name.presence || u.full_name.to_s.split(" ").first || "Someone" } %>
+                <% leftover = @team_org_members_total - @team_org_members.size %>
+                <% sentence = case @team_org_members.size
+                              when 1
+                                leftover.zero? ? "#{names[0]} is on this team" : "#{names[0]} and #{pluralize(leftover, 'other')} are on this team"
+                              when 2
+                                leftover.zero? ? "#{names[0]} and #{names[1]} are on this team" : "#{names[0]}, #{names[1]}, and #{pluralize(leftover, 'other')} are on this team"
+                              else
+                                extras = leftover + (@team_org_members.size - 2)
+                                "#{names[0]}, #{names[1]}, and #{pluralize(extras, 'other')} are on this team"
+                              end %>
+                <p class="my-0 text-sm text-white/80 leading-snug"><%= sentence %></p>
+              </div>
+            <% end %>
             <div class="mb-6 mt-4">
               <% if pending_request %>
                 <button type="button" class="btn" disabled>Request pending</button>
