@@ -178,6 +178,17 @@ Rails.application.routes.draw do
         get "data"
       end
     end
+
+    resources "first", only: [:index, :create] do
+      collection do
+        get "welcome", to: "first#new"
+        get "team", to: "first#team"
+        post "verify_email", to: "first#verify_email"
+        delete "sign_out", to: "first#sign_out"
+      end
+    end
+
+
     resources :email_updates, only: [] do
       collection do
         get "verify"
