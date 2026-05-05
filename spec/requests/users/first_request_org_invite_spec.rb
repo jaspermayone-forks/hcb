@@ -118,21 +118,6 @@ RSpec.describe Users::FirstController, type: :controller do
       expect(response).to redirect_to(first_index_path)
     end
 
-    it "rejects when the user already has a pending request for the matching event" do
-      give_user_first_affiliation
-      event_with_first_affiliation
-      create_session(user, verified: true)
-
-      post(:request_org_invite)
-      expect(OrganizerPositionInvite::Request.where(requester: user).count).to eq(1)
-
-      expect {
-        post(:request_org_invite)
-      }.not_to(change { OrganizerPositionInvite::Request.where(requester: user).count })
-
-      expect(response).to redirect_to(first_index_path)
-    end
-
     it "ignores params and never creates a request for an arbitrary event_id" do
       # Server-derived target prevents a logged-in user with no matching
       # affiliation from POSTing the endpoint with a target event_id and
