@@ -60,6 +60,21 @@ module Api
         @expand.include?(key)
       end
 
+      # Returns a related object as either expanded or as an "_id" reference
+      def expand_association(json, key, record, partial:, as:)
+        if expand?(key)
+          if record.present?
+            json.set!(key) do
+              json.partial! partial, locals: { as => record }
+            end
+          else
+            json.set!(key, nil)
+          end
+        else
+          json.set!(:"#{key}_id", record&.public_id)
+        end
+      end
+
       def expand(*keys)
         before = @expand
         @expand = @expand.dup + keys
