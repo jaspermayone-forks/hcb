@@ -294,8 +294,8 @@ class Event
       fs_contract
     end
 
-    def response_time
-      teen_led? ? "2 business days" : "2 weeks"
+    def response_business_days
+      teen_led? ? 2 : 10
     end
 
     def status_color
