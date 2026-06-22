@@ -2766,7 +2766,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_06_005743) do
   end
 
   create_table "wise_transfers", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.string "address_city"
     t.string "address_line1"
     t.string "address_line2"
