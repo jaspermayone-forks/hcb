@@ -1692,7 +1692,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_06_005743) do
   end
 
   create_table "metrics", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.datetime "canceled_at"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
