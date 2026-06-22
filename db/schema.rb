@@ -2174,7 +2174,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_06_005743) do
   end
 
   create_table "reimbursement_expense_payouts", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.integer "amount_cents", null: false
     t.datetime "created_at", null: false
     t.bigint "event_id", null: false
