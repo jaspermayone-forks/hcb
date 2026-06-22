@@ -1497,7 +1497,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_06_005743) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.bigint "amount_due"
     t.bigint "amount_paid"
     t.bigint "amount_remaining"
