@@ -1644,7 +1644,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_06_005743) do
   end
 
   create_table "logins", force: :cascade do |t|
-    t.string "aasm_state"
+    t.string "aasm_state", null: false
     t.jsonb "authentication_factors"
     t.text "browser_token_ciphertext"
     t.datetime "created_at", null: false
