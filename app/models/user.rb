@@ -169,19 +169,18 @@ class User < ApplicationRecord
   has_one :unverified_totp, -> { where(aasm_state: :unverified) }, class_name: "User::Totp", inverse_of: :user
   has_one :totp, -> { where(aasm_state: :verified) }, class_name: "User::Totp", inverse_of: :user
 
-  # a user does not actually belong to its payout method,
-  # but this is a convenient way to set up the association.
-
+  # Legacy: payout methods now live on the personal legal entity (default_payout_method).
+  # Kept only so the payout form's `fields_for :payout_method` yields payout_method_attributes params.
   belongs_to :payout_method, polymorphic: true, optional: true
   validate :auditors_must_be_verified
   accepts_nested_attributes_for :payout_method
 
   has_many :legal_entity_users
   has_many :legal_entities, through: :legal_entity_users
-  # The user's single person-type legal entity, as a preloadable has_one.
   # has_one :through needs a singular intermediate, so hop through a person-scoped join row.
   has_one :person_legal_entity_user, -> { where(legal_entity_id: LegalEntity.where(entity_type: :person).select(:id)) }, class_name: "LegalEntityUser", inverse_of: :user
   has_one :personal_legal_entity, through: :person_legal_entity_user, source: :legal_entity
+  has_one :default_payout_method, through: :personal_legal_entity
 
   has_encrypted :birthday, type: :date
 
@@ -432,10 +431,6 @@ class User < ApplicationRecord
 
   memo_wise def transactions_missing_receipt_count(from: nil, to: nil)
     transactions_missing_receipt(from:, to:).size
-  end
-
-  def default_payout_method
-    personal_legal_entity&.default_payout_method
   end
 
   def email_address_with_name(full_name: false)
