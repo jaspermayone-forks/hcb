@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_24_192401) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_25_142740) do
   create_schema "google_sheets"
 
   # These are extensions that must be enabled in order to support this database
@@ -1638,7 +1638,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_24_192401) do
     t.string "details_type", null: false
     t.bigint "legal_entity_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["details_type", "details_id"], name: "index_legal_entity_payout_methods_on_details"
+    t.index ["details_type", "details_id"], name: "index_legal_entity_payout_methods_on_details", unique: true
     t.index ["legal_entity_id"], name: "index_le_payout_methods_one_default_per_entity", unique: true, where: "(\"default\" = true)"
     t.index ["legal_entity_id"], name: "index_legal_entity_payout_methods_on_legal_entity_id"
   end
