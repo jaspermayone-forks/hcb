@@ -1955,10 +1955,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_26_192306) do
     t.datetime "created_at", null: false
     t.bigint "creator_id", null: false
     t.string "currency", null: false
-    t.datetime "failed_at"
     t.bigint "payee_id", null: false
-    t.bigint "payout_id"
-    t.string "payout_type"
     t.string "purpose", null: false
     t.datetime "rejected_at"
     t.datetime "sent_at"
@@ -1967,7 +1964,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_26_192306) do
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_payments_on_creator_id"
     t.index ["payee_id"], name: "index_payments_on_payee_id"
-    t.index ["payout_type", "payout_id"], name: "index_payments_on_payout"
   end
 
   create_table "paypal_transfers", force: :cascade do |t|
