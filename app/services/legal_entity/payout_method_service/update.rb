@@ -27,9 +27,13 @@ class LegalEntity
         apply_business_rules
         return false if @payout_method.errors.any?
 
+        replaced_method = @user.default_payout_method
+
         # autosave: true on :details saves the detail record and the payout
         # method together, atomically, even inside the controller's transaction.
-        @payout_method.save
+        saved = @payout_method.save
+        repoint_failed_and_draft_reports(replaced_method) if saved
+        saved
       end
 
       def run!
@@ -75,10 +79,32 @@ class LegalEntity
         end
       end
 
+      def repoint_failed_and_draft_reports(replaced_method)
+        return unless replaced_method
+
+        on_replaced_method = @user.reimbursement_reports.where(legal_entity_payout_method_id: replaced_method.id)
+
+        failed = on_replaced_method.joins(:payout_holding).where(reimbursement_payout_holdings: { aasm_state: :failed })
+        draft = on_replaced_method.where(aasm_state: :draft)
+
+        # update! runs validations and records the change in paper_trail; each
+        # is wrapped in safely so a single report that can't be repointed is
+        # reported rather than silently skipped, without aborting the user's
+        # payout-method change or the other repoints.
+        (failed + draft).each do |report|
+          safely do
+            report.update!(legal_entity_payout_method: @payout_method)
+          end
+        end
+      end
+
       def switching_to_wise_while_processing?
+        # Only reports that still track the user's default (no payout method
+        # set on the report) would be flipped to Wise by this change; reports
+        # with their own payout method keep their original and are unaffected.
         @payout_method.details.is_a?(LegalEntity::PayoutMethod::WiseTransfer) &&
           !@user.default_payout_method&.details.is_a?(LegalEntity::PayoutMethod::WiseTransfer) &&
-          @user.reimbursement_reports.where(aasm_state: PROCESSING_STATES).any?
+          @user.reimbursement_reports.where(aasm_state: PROCESSING_STATES, legal_entity_payout_method_id: nil).any?
       end
 
     end
