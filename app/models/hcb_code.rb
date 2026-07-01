@@ -68,6 +68,8 @@ class HcbCode < ApplicationRecord
 
   before_create :generate_and_set_short_code
 
+  after_create :write_event_and_subledger_id
+
   delegate :likely_account_verification_related?, :fee_payment?, to: :ct, allow_nil: true
 
   validates :hcb_code, format: { with: /\AHCB-\d{3}-\S+\z/ }
