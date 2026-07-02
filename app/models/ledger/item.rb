@@ -95,6 +95,42 @@ class Ledger
       :zero
     end
 
+    def author
+      case linked_object_type || raw_pending_transaction_type || raw_transaction_type
+      when "AchTransfer"
+        linked_object&.creator
+      when "CheckDeposit"
+        linked_object&.created_by
+      when "Check"
+        linked_object&.creator
+      when "IncreaseCheck"
+        linked_object&.user
+      when "Disbursement::Outgoing"
+        linked_object&.requested_by
+      when "Disbursement::Incoming"
+        linked_object&.requested_by
+      when "Reimbursement::ExpensePayout"
+        linked_object&.expense&.report&.user
+      when "PaypalTransfer"
+        linked_object&.user
+      when "Donation"
+        linked_object&.collected_by if linked_object&.in_person?
+      when "Wire"
+        linked_object&.user
+      when "WiseTransfer"
+        linked_object&.user
+      when "RawPendingStripeTransaction"
+        stripe_cardholder&.user
+      when "RawStripeTransaction"
+        stripe_cardholder&.user
+      end
+    end
+
+    # TODO: get rid of this method once CardCharge is created as an LO
+    def stripe_cardholder
+      pt.try(:stripe_cardholder) || ct.try(:stripe_cardholder)
+    end
+
     private
 
     def type_metadata
