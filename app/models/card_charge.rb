@@ -5,8 +5,10 @@
 # Table name: card_charges
 #
 #  id                                :bigint           not null, primary key
+#  merchant_category                 :string
 #  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null
+#  merchant_network_id               :string
 #  raw_pending_stripe_transaction_id :bigint
 #
 # Indexes
@@ -35,6 +37,8 @@ class CardCharge < ApplicationRecord
         stripe_id: stripe_card.stripe_id
       )
   }
+
+  before_create :set_merchant_data
 
   def stripe_card
     (raw_stripe_transactions.last || raw_pending_stripe_transaction)&.stripe_card
@@ -85,7 +89,14 @@ class CardCharge < ApplicationRecord
 
       existing
     else
-      create!(raw_pending_stripe_transaction:)
+      charge = create!(raw_pending_stripe_transaction:)
+
+      # set_merchant_data reads raw_stripe_transactions in a before_create hook,
+      # which caches the (empty) collection on this instance. Reset it so the
+      # charge picks up transactions that settle onto it later.
+      charge.association(:raw_stripe_transactions).reset
+
+      charge
     end
   end
 
@@ -107,6 +118,11 @@ class CardCharge < ApplicationRecord
     raw_stripe_transaction.association(:card_charge).reset
 
     charge
+  end
+
+  def set_merchant_data
+    self.merchant_network_id ||= merchant_data&.[]("network_id")
+    self.merchant_category ||= merchant_data&.[]("category")
   end
 
 end
