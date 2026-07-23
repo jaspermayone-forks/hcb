@@ -557,7 +557,11 @@ class EventsController < ApplicationController
         }
       }
     end
-    render json: data
+
+    # The cached entry covers every descendant and is shared across viewers, so
+    # drop the sub-organizations this one isn't allowed to see before rendering.
+    visible_ids = visible_descendant_ids.to_set << @event.id
+    render json: data.select { |row| visible_ids.include?(row[:id]) }
   end
 
   def account_number
@@ -922,8 +926,14 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @sub_organizations = filtered_sub_organizations.page(params[:page]).per(params[:per] || 24)
-        @all_events = [@event] + @event.descendants.order(:name).select(:name, :parent_id, :slug, :id).to_a
+        sub_organizations = filtered_sub_organizations
+        # Hidden organizations are set aside in their own collapsed section,
+        # matching how the organization index treats them.
+        @sub_organizations = sub_organizations.not_hidden.page(params[:page]).per(params[:per] || 24)
+        @hidden_sub_organizations = sub_organizations.hidden.to_a
+        # The graph renders only nodes reachable from the root, so leaving a
+        # hidden organization out keeps everything under it off the graph too.
+        @all_events = [@event] + Event.where(id: visible_descendant_ids).not_hidden.order(:name).select(:name, :parent_id, :slug, :id).to_a
       end
 
       # CSV export intentionally does not consider filters
@@ -934,7 +944,7 @@ class EventsController < ApplicationController
           # robust, immutable identifier compared to slugs.
           csv << %w[ID Name Slug Balance Tags]
 
-          @event.subevents.includes(:scoped_tags).find_each do |e|
+          @event.subevents.where(id: visible_descendant_ids).includes(:scoped_tags).find_each do |e|
             tags_for_parent = e.scoped_tags.select { |tag| tag.parent_event_id == e.parent_id }
             csv << [e.public_id, e.name, e.slug, e.balance_v2_cents / 100.0, tags_for_parent.map(&:name).join(", ")].map { |value| SafeCsv.sanitize(value) }
           end
@@ -1308,11 +1318,16 @@ class EventsController < ApplicationController
     params_hash.delete(:hidden)
   end
 
-  def filtered_sub_organizations(sub_organizations = @event.subevents)
+  # Memoized across the several surfaces of this page that need it.
+  def visible_descendant_ids
+    @visible_descendant_ids ||= @event.visible_descendant_ids(current_user)
+  end
+
+  def filtered_sub_organizations
     search = params[:q] || params[:search]
     scoped_tag = Event::ScopedTag.find_by(name: params[:tag])
 
-    relation = sub_organizations.includes(:scoped_tags, :parent, logo_attachment: :blob, background_image_attachment: :blob, organizer_positions: :user)
+    relation = @event.subevents.where(id: visible_descendant_ids).includes(:scoped_tags, :parent, logo_attachment: :blob, background_image_attachment: :blob, organizer_positions: :user)
     relation = relation.where("name ILIKE ?", "%#{search}%") if search.present?
     relation = relation.joins(:scoped_tags).where("event_scoped_tags.id = #{scoped_tag.id}") if scoped_tag.present?
     relation = relation.order(created_at: :desc)
