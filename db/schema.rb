@@ -3187,7 +3187,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_31_160241) do
   add_foreign_key "payroll_invoices", "payroll_positions"
   add_foreign_key "payroll_invoices", "users", column: "reviewed_by_id"
   add_foreign_key "payroll_positions", "payees"
-  add_foreign_key "raffles", "raffles", column: "referring_raffle_id", validate: false
+  add_foreign_key "raffles", "raffles", column: "referring_raffle_id"
   add_foreign_key "raffles", "users"
   add_foreign_key "raw_pending_fee_reimbursement_transactions", "fee_reimbursements"
   add_foreign_key "raw_pending_fee_revenue_transactions", "fee_revenues"
