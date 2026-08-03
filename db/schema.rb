@@ -1849,6 +1849,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_31_160241) do
   end
 
   create_table "organizer_position_deletion_requests", force: :cascade do |t|
+    t.bigint "assignee_id"
     t.datetime "closed_at", precision: nil
     t.bigint "closed_by_id"
     t.datetime "created_at", precision: nil, null: false
@@ -1861,6 +1862,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_31_160241) do
     t.boolean "subject_has_outstanding_transactions_stripe", default: false, null: false
     t.bigint "submitted_by_id", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["assignee_id"], name: "index_organizer_position_deletion_requests_on_assignee_id"
     t.index ["closed_by_id"], name: "index_organizer_position_deletion_requests_on_closed_by_id"
     t.index ["organizer_position_id"], name: "index_organizer_deletion_requests_on_organizer_position_id"
     t.index ["submitted_by_id"], name: "index_organizer_position_deletion_requests_on_submitted_by_id"
