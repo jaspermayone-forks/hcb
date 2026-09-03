@@ -571,8 +571,6 @@ class UsersController < ApplicationController
       :birthday,
       :profile_picture,
       :seasonal_themes_enabled,
-      # admin
-      :pretend_is_not_admin,
       # security
       :sessions_reported,
       :session_validity_preference,
@@ -596,6 +594,10 @@ class UsersController < ApplicationController
           :stripe_billing_address_country
         ]
       }
+    end
+
+    if @user == current_user && current_user.admin_override_pretend?
+      attributes << :pretend_is_not_admin
     end
 
     if admin_signed_in?
