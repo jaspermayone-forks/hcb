@@ -1144,7 +1144,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_140226) do
     t.string "aasm_state", null: false
     t.datetime "activated_at"
     t.text "address"
-    t.boolean "can_front_balance", default: true, null: false
     t.integer "country"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "deleted_at", precision: nil
